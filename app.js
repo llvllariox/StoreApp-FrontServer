@@ -23,8 +23,8 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res) =
 });
 
 //Rutas la principal va al final.
-app.use('/login', usuarioRoutes);
-app.use('/usuario', loginRoutes);
+app.use('/usuario', usuarioRoutes);
+app.use('/login', loginRoutes);
 app.use('/', appRoutes);
 
 // Escuchar peticiones /3000=puerto 
