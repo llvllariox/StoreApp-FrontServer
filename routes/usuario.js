@@ -7,9 +7,6 @@ var mdAutenticacion = require('../middlewares/autenticacion')
 var app = express();
 var Usuario = require('../models/usuario');
 
-
-
-
 //===================================
 // Obtener todos los usuario
 //==================================
@@ -33,8 +30,6 @@ app.get('/', (req, res, next) => {
             }
         );
 });
-
-
 
 //===================================
 // Actualizar usuario
