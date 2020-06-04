@@ -10,19 +10,21 @@ var Hospital = require('../models/hospital');
 app.get('/', (req, res, next) => {
 
 
-    Hospital.find({}, (err, hospitals) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error Obteniendo hospital',
-                errors: err
-            });
-        }
-        res.status(200).json({
-            ok: true,
-            hospitals: hospitals
-        })
-    });
+    Hospital.find({})
+        .populate('usuario', 'nombre email')
+        .exec((err, hospitals) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error Obteniendo hospital',
+                    errors: err
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                hospitals: hospitals
+            })
+        });
 });
 
 //===================================
@@ -50,7 +52,7 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
         res.status(201).json({
             ok: true,
-            body: hospitalGuardado,
+            hospital: hospitalGuardado,
             // hospitalToken: req.hospital
         });
 
@@ -84,7 +86,6 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         }
 
         hospital.nombre = body.nombre;
-        console.log(body.nombre);
         hospital.usuario = req.usuario._id;
         // hospital.email = body.email;
         // hospital.role = body.role;
@@ -100,7 +101,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
             hospital.password = ':)'
             res.status(200).json({
                 ok: true,
-                body: hospitalGuardado
+                hospital: hospitalGuardado
             });
         })
     });
