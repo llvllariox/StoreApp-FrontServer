@@ -69,22 +69,18 @@ app.put('/:tipo/:id', (req, res, next) => {
         subirPorTipo(tipo, id, nombreArchivo, res);
     });
 
-
-
-
-
 });
 
 function subirPorTipo(tipo, id, nombreArchivo, res) {
 
     if (tipo === 'usuarios') {
 
-        Usuario.find(id, (err, usuario) => {
+        Usuario.findById(id, (err, usuario) => {
             var pathViejo = './uploads/usuarios/' + usuario.img;
 
             //si existe una imagen la elimina
             if (fs.existsSync(pathViejo)) {
-                fs.unlink(pathViejo)
+                fs.unlinkSync(pathViejo)
             }
 
             usuario.img = nombreArchivo;
@@ -96,19 +92,51 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                     usuario: usuarioActualizado
                 })
             })
-
-
-
         });
-
     }
 
     if (tipo === 'medicos') {
 
+        Medico.findById(id, (err, medico) => {
+            var pathViejo = './uploads/medicos/' + medico.img;
+
+            //si existe una imagen la elimina
+            if (fs.existsSync(pathViejo)) {
+                fs.unlinkSync(pathViejo)
+            }
+
+            medico.img = nombreArchivo;
+            medico.save((err, medicoActualizado) => {
+
+                return res.status(200).json({
+                    ok: true,
+                    mensaje: 'imagen actualizada correctamente',
+                    medico: medicoActualizado
+                })
+            })
+        });
     }
 
     if (tipo === 'hospitales') {
 
+        Hospital.findById(id, (err, hospital) => {
+            var pathViejo = './uploads/hospitales/' + hospital.img;
+
+            //si existe una imagen la elimina
+            if (fs.existsSync(pathViejo)) {
+                fs.unlinkSync(pathViejo)
+            }
+
+            hospital.img = nombreArchivo;
+            hospital.save((err, hospitalActualizado) => {
+
+                return res.status(200).json({
+                    ok: true,
+                    mensaje: 'imagen actualizada correctamente',
+                    hospital: hospitalActualizado
+                })
+            })
+        });
     }
 
 }
