@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var mdAutenticacion = require('../middlewares/autenticacion')
+var mdAutenticacion = require('../middlewares/autenticacion');
 
 var Hospital = require('../models/hospital');
 
@@ -35,7 +35,6 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
     var hospital = new Hospital({
         nombre: body.nombre,
-        img: body.email,
         usuario: req.usuario._id
     });
 

@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var mdAutenticacion = require('../middlewares/autenticacion');
 
 
 var Medico = require('../models/medico');
@@ -8,7 +9,6 @@ var Medico = require('../models/medico');
 // Obtener todos los medicoes
 //==================================
 app.get('/', (req, res, next) => {
-
 
     Medico.find({}, (err, medicos) => {
         if (err) {
@@ -35,8 +35,8 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
 
     var medico = new Medico({
         nombre: body.nombre,
-        img: body.email,
-        usuario: req.usuario._id
+        usuario: req.usuario._id,
+        hospital: body.hospital
     });
 
     medico.save((err, medicoGuardado) => {
@@ -87,7 +87,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         medico.nombre = body.nombre;
         console.log(body.nombre);
         medico.usuario = req.usuario._id;
-        // medico.email = body.email;
+        medico.hospital = body.hospital;
         // medico.role = body.role;
 
         medico.save((err, medicoGuardado) => {
