@@ -85,7 +85,7 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
 
             usuario.img = nombreArchivo;
             usuario.save((err, usuarioActualizado) => {
-
+                usuarioActualizado.password = ':)'
                 return res.status(200).json({
                     ok: true,
                     mensaje: 'imagen actualizada correctamente',
