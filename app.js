@@ -39,8 +39,6 @@ mongoose.connect(uri, (err, res) => {
 //Rutas la principal va al final.
 app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
-app.use('/hospital', hospitalRoutes);
-app.use('/medico', medicoRoutes);
 app.use('/busqueda', busquedaRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/img', imagenesRoutes);
