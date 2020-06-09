@@ -48,7 +48,7 @@ var imagenesRoutes = require('./routes/imagenes');
 //Conexion BD atlas con usuario userReadWrite 
 const uri = "mongodb+srv://userReadWrite:af29101988@hospitadb-uewzz.mongodb.net/hospitaDB?retryWrites=true&w=majority";
 
-mongoose.connection.openUri(uri, (err, res) => {
+mongoose.connect(uri, (err, res) => {
     if (err) throw err;
     console.log('Base de Datos puerto 27017: \x1b[32m%s\x1b[0m', 'Online');
 });
