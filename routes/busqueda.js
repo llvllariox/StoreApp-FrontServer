@@ -1,15 +1,14 @@
 var express = require('express');
 var app = express();
-// var Hospital = require('../models/hospital');
-// var Medico = require('../models/medico');
-var Usuario = require('../models/usuario');
+var Producto = require('../models/producto');
+var Categoria = require('../models/categoria');
 
 
 
 //-----------------------------------------------
 //busqueda en tabla especifica
 //-----------------------------------------------
-app.get('/coleccion/:tabla/:busqueda', (req, res) => {
+app.get('/:tabla/:busqueda', (req, res) => {
 
     var busqueda = req.params.busqueda;
     var tabla = req.params.tabla;
@@ -18,20 +17,17 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
     var promesa;
 
     switch (tabla) {
-        case 'usuarios':
-            promesa = buscarUsuarios(busqueda, regex)
+        case 'productos':
+            promesa = buscarProductos(busqueda, regex)
             break;
-            // case 'medicos':
-            //     promesa = buscarMedicos(busqueda, regex)
-            //     break;
-            // case 'hospitales':
-            //     promesa = buscarHospitales(busqueda, regex)
-            //     break;
+        case 'categorias':
+            promesa = buscarCategorias(busqueda, regex)
+            break;
         default:
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Coleccion incorrecta',
-                error: { message: 'Coleccion no valida' }
+                mensaje: 'tabla incorrecta',
+                error: { message: 'tabla no valida' }
             });
     }
 
@@ -41,89 +37,54 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
             ok: true,
             [tabla]: data //[] las llaves para que variable de objeto conmutada , para que tome el valor no la palabra
         });
+    }).catch(err => {
+        res.status(400).json({
+            ok: false,
+            mensaje: 'Error al buscar',
+            error: err
+        })
     });
 });
 
 
-//-----------------------------------------------
-// Busqueda en todas las tablas
-//-----------------------------------------------
-app.get('/todo/:busqueda', (req, res) => {
-
-    var busqueda = req.params.busqueda;
-    //Expresion regular para buscar en tabla, ademas la i es para case sentitive
-    var regex = new RegExp(busqueda, 'i');
-
-    Promise.all([
-            buscarHospitales(busqueda, regex),
-            // buscarMedicos(busqueda, regex),
-            // buscarUsuarios(busqueda, regex)
-        ])
-        .then(respuestas => {
-            res.status(200).json({
-                ok: true,
-                hospitales: respuestas[0],
-                // medicos: respuestas[1],
-                // usuarios: respuestas[2]
-            });
-        });
-});
-
-// function buscarHospitales(busqueda, regex) {
-
-//     return new Promise((resolve, reject) => {
-
-//         Hospital.find({ nombre: regex })
-//             .populate('usuario', 'nombre, email')
-//             .exec((err, hospitales) => {
-
-//                 if (err) {
-//                     reject('Error al buscar en Hospitales', err);
-//                 } else {
-//                     resolve(hospitales);
-//                 }
-//             });
-//     });
-// }
-
-function buscarUsuarios(busqueda, regex) {
+function buscarProductos(busqueda, regex) {
 
     return new Promise((resolve, reject) => {
 
-        Usuario.find({}, 'nombre email role')
+        Producto.find({})
+            .populate('categoria', 'nombre')
             .or([
                 { nombre: regex },
-                { email: regex }
+                { descripcion: regex },
+                // { categoria: regex },
             ])
-            .exec((err, usuarios) => {
+            .exec((err, productos) => {
                 if (err) {
-                    reject('Error al buscar en usuarios', err);
+                    reject('Error al buscar en productos' + err, err);
                 } else {
-                    resolve(usuarios);
+                    resolve(productos);
                 }
             });
     });
 }
 
-// function buscarMedicos(busqueda, regex) {
+function buscarCategorias(busqueda, regex) {
 
-//     return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
-//         Medico.find({ nombre: regex })
-//             .populate('usuario', 'nombre email')
-//             .populate('hospital')
-//             .exec((err, medicos) => {
-
-//                 if (err) {
-//                     reject('Error al buscar en medicos', err);
-//                 } else {
-//                     resolve(medicos);
-//                 }
-//             });
-
-//     });
-// }
-
+        Categoria.find({})
+            .or([
+                { nombre: regex }
+            ])
+            .exec((err, categorias) => {
+                if (err) {
+                    reject('Error al buscar en categorias', err);
+                } else {
+                    resolve(categorias);
+                }
+            });
+    });
+}
 
 
 module.exports = app;

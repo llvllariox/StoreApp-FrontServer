@@ -3,7 +3,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-//heroku
+//Heroku
 const port = process.env.PORT || 3000;
 //Inicializar variables
 var app = express();
@@ -25,7 +25,7 @@ var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
 var productoRoutes = require('./routes/producto');
-
+var categoriaRoutes = require('./routes/categoria');
 var busquedaRoutes = require('./routes/busqueda');
 
 //Conexion BD atlas con usuario userReadWrite 
@@ -41,6 +41,7 @@ app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
 app.use('/busqueda', busquedaRoutes);
 app.use('/producto', productoRoutes);
+app.use('/categoria', categoriaRoutes);
 app.use('/', appRoutes);
 
 // Escuchar peticiones

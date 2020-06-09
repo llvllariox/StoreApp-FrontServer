@@ -7,8 +7,6 @@ var app = express();
 var Usuario = require('../models/usuario');
 
 
-//google
-var CLIENT_ID = require('../config/config').CLIENT_ID;
 //---------------------------------------------------
 //Login normal
 //---------------------------------------------------
@@ -53,9 +51,6 @@ app.post('/', (req, res) => {
         });
     })
 
-
-
 });
-
 
 module.exports = app;

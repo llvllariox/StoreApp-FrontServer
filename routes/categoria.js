@@ -1,20 +1,21 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
-// var SEED = require('../config/config').SEED;
 var mdAutenticacion = require('../middlewares/autenticacion')
 
 var app = express();
-var Producto = require('../models/producto');
+var Categoria = require('../models/categoria');
+
+var limit = 5;
 
 //===================================
-// crear nuevo producto OK
+// crear nuevo categoria OK
 //==================================
 app.post('/', (req, res) => {
 
     var body = req.body;
 
-    var producto = new Producto({
+    var categoria = new Categoria({
         nombre: body.nombre,
         precio: body.precio,
         descripcion: body.descripcion,
@@ -28,51 +29,51 @@ app.post('/', (req, res) => {
 
     });
 
-    producto.save((err, productoGuardado) => {
+    categoria.save((err, categoriaGuardado) => {
 
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear producto',
+                mensaje: 'Error al crear categoria',
                 errors: err
             });
         }
 
         res.status(201).json({
             ok: true,
-            body: productoGuardado,
-            productoToken: req.producto
+            body: categoriaGuardado,
+            categoriaToken: req.categoria
         });
 
     });
 });
 
 //===================================
-// Obtener todos los producto OK
+// Obtener todos los categoria OK
 //==================================
 app.get('/', (req, res, next) => {
+
 
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Producto.find({})
+    Categoria.find({})
         .skip(desde)
-        .limit(5)
-        .populate('categoria', 'nombre')
+        .limit(limit)
         .exec(
-            (err, productos) => {
+            (err, categorias) => {
                 if (err) {
                     return res.status(500).json({
                         ok: false,
-                        mensaje: 'Error Obteniendo producto',
+                        mensaje: 'Error Obteniendo categoria',
                         errors: err
                     });
                 }
 
-                Producto.count({}, (err, conteo) => {
+                Categoria.count({}, (err, conteo) => {
                     res.status(200).json({
                         ok: true,
-                        productos: productos,
+                        categorias: categorias,
                         total: conteo
                     });
                 })
@@ -81,7 +82,7 @@ app.get('/', (req, res, next) => {
         );
 });
 //===================================
-// Obtener un producto 
+// Obtener una categoria 
 //==================================
 app.get('/:id', (req, res, next) => {
 
@@ -89,76 +90,75 @@ app.get('/:id', (req, res, next) => {
     // var desde = req.query.desde || 0;
     // desde = Number(desde);
     console.log(id);
-    Producto.findById(id)
-        .populate('categoria', 'nombre')
+    Categoria.findById(id)
+        // .populate('categoria', 'nombre')
         .exec(
-            (err, producto) => {
+            (err, categoria) => {
                 if (err) {
                     return res.status(500).json({
                         ok: false,
-                        mensaje: 'Error Obteniendo producto',
+                        mensaje: 'Error Obteniendo categoria',
                         errors: err
                     });
                 }
 
                 res.status(200).json({
                     ok: true,
-                    producto: producto
-                });
+                    categoria: categoria,
 
+                });
             }
         );
 });
-
 //===================================
-// Actualizar producto OK
+// Actualizar categoria OK
 //==================================
 app.put('/:id', (req, res) => {
 
     var id = req.params.id;
     var body = req.body;
 
-    Producto.findById(id, (err, producto) => {
+    Categoria.findById(id, (err, categoria) => {
 
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar producto',
+                mensaje: 'Error al buscar categoria',
                 errors: err
             });
         }
 
-        if (!producto) {
+        if (!categoria) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El producto con el id ' + id + ' no existe',
-                errors: { message: 'No existe producto' }
+                mensaje: 'El categoria con el id ' + id + ' no existe',
+                errors: { message: 'No existe categoria' }
             });
         }
 
-        producto.nombre = body.nombre;
-        producto.precio = body.precio;
-        producto.descripcion = body.descripcion;
-        producto.stock = body.stock;
-        producto.categoria = body.categoria;
-        producto.oferta = body.oferta;
-        producto.destacado = body.destacado;
-        producto.nuevo = body.nuevo;
-        producto.descuento = body.descuento;
-        producto.activo = body.activo;
+        categoria.nombre = body.nombre;
+        categoria.precio = body.precio;
+        categoria.descripcion = body.descripcion;
+        categoria.stock = body.stock;
+        categoria.categoria = body.categoria;
+        categoria.oferta = body.oferta;
+        categoria.destacado = body.destacado;
+        categoria.nuevo = body.nuevo;
+        categoria.descuento = body.descuento;
+        categoria.activo = body.activo;
 
-        producto.save((err, productoGuardado) => {
+        categoria.save((err, categoriaGuardado) => {
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error al actualizar producto',
+                    mensaje: 'Error al actualizar categoria',
                     errors: err
                 });
             }
-            producto.password = ':)'
+            categoria.password = ':)'
             res.status(200).json({
                 ok: true,
-                body: productoGuardado
+                body: categoriaGuardado
             });
         })
     });
@@ -166,30 +166,30 @@ app.put('/:id', (req, res) => {
 
 
 //===================================
-// Eliminar producto OK
+// Eliminar categoria OK
 //==================================
 app.delete('/:id', (req, res) => {
 
     var id = req.params.id;
-    Producto.findByIdAndRemove(id, (err, productoBorrado) => {
+    Categoria.findByIdAndRemove(id, (err, categoriaBorrado) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al borrar producto',
+                mensaje: 'Error al borrar categoria',
                 errors: err
             });
         }
-        if (!productoBorrado) {
+        if (!categoriaBorrado) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El producto con el id ' + id + ' no existe',
-                errors: { message: 'No existe producto a eliminar' }
+                mensaje: 'El categoria con el id ' + id + ' no existe',
+                errors: { message: 'No existe categoria a eliminar' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            producto: productoBorrado
+            categoria: categoriaBorrado
         });
     })
 });
