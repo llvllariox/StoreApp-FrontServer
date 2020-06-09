@@ -3,6 +3,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
+//heroku
+const port = process.env.PORT || 3000;
 //Inicializar variables
 var app = express();
 
@@ -36,11 +38,32 @@ var busquedaRoutes = require('./routes/busqueda');
 var uploadRoutes = require('./routes/upload');
 var imagenesRoutes = require('./routes/imagenes');
 
-//Conexion BD
-mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res) => {
+
+//Conexion BD localhost
+// mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res) => {
+//     if (err) throw err;
+//     console.log('Base de Datos puerto 27017: \x1b[32m%s\x1b[0m', 'Online');
+// });
+
+//Conexion BD atlas con usuario userReadWrite 
+const uri = "mongodb+srv://userReadWrite:af29101988@hospitadb-uewzz.mongodb.net/hospitaDB?retryWrites=true&w=majority";
+
+mongoose.connection.openUri(uri, (err, res) => {
     if (err) throw err;
     console.log('Base de Datos puerto 27017: \x1b[32m%s\x1b[0m', 'Online');
 });
+
+
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = "mongodb+srv://af29101988:af29101988@hospitadb-uewzz.mongodb.net/hospitaDB?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true });
+// client.connect(err => {
+//     const collection = client.db("test").collection("devices");
+//     if (err) throw err;
+//     console.log('Base de Datos puerto 27017: \x1b[32m%s\x1b[0m', 'Online');
+//     // perform actions on the collection object
+//     client.close();
+// });
 
 //Rutas la principal va al final.
 app.use('/usuario', usuarioRoutes);
@@ -53,8 +76,8 @@ app.use('/img', imagenesRoutes);
 app.use('/', appRoutes);
 
 // Escuchar peticiones /3000=puerto 
-app.listen(3000, () => {
-    console.log('Express Server puerto 3000: \x1b[32m%s\x1b[0m', 'Online');
+app.listen(port, () => {
+    console.log(`Express Server puerto ${port}: \x1b[32m%s\x1b[0m`, 'Online');
 })
 
 
