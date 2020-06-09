@@ -12,9 +12,9 @@ var usuarioSchema = new Schema({
     nombre: { type: String, required: [true, 'El nombre es Obligatorio'] },
     email: { type: String, unique: true, required: [true, 'El email es Obligatorio'] },
     password: { type: String, required: [true, 'La contraseña es Obligatoria'] },
-    img: { type: String, required: false },
+    // img: { type: String, required: false },
     role: { type: String, required: true, default: 'USER_ROLE', enum: rolesValidos },
-    google: { type: Boolean, default: false }
+    // google: { type: Boolean, default: false }
 
 });
 

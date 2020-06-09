@@ -24,9 +24,9 @@ app.use(bodyParser.json());
 var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
 var loginRoutes = require('./routes/login');
+var productoRoutes = require('./routes/producto');
+
 var busquedaRoutes = require('./routes/busqueda');
-var uploadRoutes = require('./routes/upload');
-var imagenesRoutes = require('./routes/imagenes');
 
 //Conexion BD atlas con usuario userReadWrite 
 const uri = "mongodb+srv://userReadWrite:af29101988@hospitadb-uewzz.mongodb.net/StoreApp?retryWrites=true&w=majority";
@@ -40,8 +40,7 @@ mongoose.connect(uri, (err, res) => {
 app.use('/usuario', usuarioRoutes);
 app.use('/login', loginRoutes);
 app.use('/busqueda', busquedaRoutes);
-app.use('/upload', uploadRoutes);
-app.use('/img', imagenesRoutes);
+app.use('/producto', productoRoutes);
 app.use('/', appRoutes);
 
 // Escuchar peticiones
