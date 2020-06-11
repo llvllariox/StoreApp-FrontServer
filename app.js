@@ -13,6 +13,8 @@ app.use(express.static(__dirname + '/dist/storeapp'));
 
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname + '/dist/storeapp/index.html'));
-    console.log(`Express Server puerto 80: \x1b[32m%s\x1b[0m`, 'Online');
+
 });
-app.listen(5000);
+app.listen(5000, () => {
+    console.log(`Express Server puerto 5000: \x1b[32m%s\x1b[0m`, 'Online');
+});
