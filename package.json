@@ -11,6 +11,7 @@
     "license": "ISC",
     "dependencies": {
         "express": "^4.17.1",
+        "node-env-file": "^0.1.8",
         "serve-index": "^1.9.1"
     }
 }
