@@ -54,9 +54,14 @@ if (process.env.ENV == 'AWS') {
     const httpServer = http.createServer(app);
     const httpsServer = https.createServer(credentials, app);
 
-    httpServer.listen(process.env.HTTP_PORT, () => {
-        console.log('HTTP Server running on port ' + process.env.HTTP_PORT);
-    });
+    // httpServer.listen(process.env.HTTP_PORT, () => {
+    //     console.log('HTTP Server running on port ' + process.env.HTTP_PORT);
+    // });
+    //Redirect to HTTPS
+    http.createServer(function(req, res) {
+        res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+        res.end();
+    }).listen(80);
 
     httpsServer.listen(process.env.HTTPS_PORT, () => {
         console.log('HTTPS Server running on port ' + process.env.HTTPS_PORT);
